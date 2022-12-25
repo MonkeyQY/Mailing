@@ -11,7 +11,6 @@ from app.depends.depend_mailing import get_mailing_repository
 from app.depends.depend_message import get_message_repository
 from app.models.client import Client
 from app.models.mailing import Mailing
-from app.models.message import Message
 from app.repositories.client_repository import ClientRepository
 from app.repositories.mailing_repository import MailingRepository
 from app.repositories.message_repository import MessageRepository
