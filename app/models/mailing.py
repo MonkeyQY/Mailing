@@ -26,6 +26,7 @@ class MailingAdd(BaseModel):
             "example": {
                 "filter": "tag or mobile operator code",
                 "text_message": "Hello",
+                "time_sending": 1,
                 "start_time": {
                     "year": 2021,
                     "month": 5,
@@ -60,6 +61,7 @@ class MailingUpdate(BaseModel):
             "example": {
                 "id": 1,
                 "filter": "tag or mobile operator code",
+                "time_sending": 10,
                 "text_message": "Hello",
                 "start_time": {
                     "year": 2021,
@@ -89,8 +91,8 @@ class MailingAddResponse(BaseModel):
     id: int
     filter: str
     text_message: str
-    start_time: dict
-    end_time: dict
+    start_time: str
+    end_time: str
     time_sending: int
     message: str
 
@@ -101,22 +103,8 @@ class MailingAddResponse(BaseModel):
                 "id": 1,
                 "filter": "age > 18",
                 "text_message": "Hello",
-                "start_time": {
-                    "year": 2021,
-                    "month": 5,
-                    "day": 1,
-                    "hour": 0,
-                    "minute": 0,
-                    "second": 0
-                },
-                "end_time": {
-                    "year": 2021,
-                    "month": 5,
-                    "day": 1,
-                    "hour": 0,
-                    "minute": 0,
-                    "second": 0
-                },
+                "start_time": "2021-05-01 00:00:00",
+                "end_time": "2021-05-01 00:00:00",
                 "message": "Mailing updated successfully",
             }
         }

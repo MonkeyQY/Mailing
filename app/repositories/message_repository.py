@@ -13,12 +13,12 @@ class MessageRepository(BaseRepository):
         query = messages.insert().values(
             client_id=client_id,
             mailing_id=mailing_id,
-            status_sending=status_sending
+            sending_status=status_sending
         )
         return await self.database.execute(query=query)
 
     async def change_status(self, message_id: int, status_sending: bool = True):
         query = messages.update().where(messages.c.id == message_id).values(
-            status_sending=status_sending
+            sending_status=status_sending
         )
         return await self.database.execute(query=query)

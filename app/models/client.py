@@ -6,14 +6,14 @@ class Client(BaseModel):
     mobile_number: int
     mobile_operator_code: str
     tag: str
-    utc: int
+    utc: str
 
 
 class ClientAdd(BaseModel):
     mobile_number: int
     mobile_operator_code: str
     tag: str
-    utc: int
+    utc: str
 
 
 class ClientUpdate(BaseModel):
@@ -21,7 +21,7 @@ class ClientUpdate(BaseModel):
     mobile_number: int
     mobile_operator_code: str
     tag: str
-    utc: int
+    utc: str
 
 
 class ClientDelete(BaseModel):

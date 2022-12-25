@@ -32,7 +32,7 @@ class ClientRepository(BaseRepository):
             mobile_operator_code=client.mobile_operator_code,
             tag=client.tag,
             utc=client.utc)
-        return await self.database.execute(query=query)
+        await self.database.execute(query=query)
 
     async def delete(self, client: ClientDelete):
         query = clients.delete().where(clients.c.id == client.id)

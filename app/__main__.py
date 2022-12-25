@@ -16,7 +16,7 @@ from app.endpoints.statistics_for_mailing.detail_for_the_mailing import router a
 
 from app import config
 from app.db.db import database
-from app.scheduler.scheduler import start_scheduler
+from app.scheduler.scheduler import start_scheduler, schedule
 from app.smpt_servers import server_smtp_gmail
 
 # запись логов в файл
@@ -52,7 +52,7 @@ app.include_router(
     statistics_for_total_mailing_router, prefix=config.prefix_api, tags=["Statistics for mailing"])
 
 logging.basicConfig(
-    format='{asctime} : {levelname} : {name} : {message}', style='{', level=logging.INFO)
+    format='{asctime} : {levelname} : {name} : {message}', style='{', level=logging.DEBUG)
 
 log = logging.getLogger("main")
 
@@ -61,22 +61,20 @@ log = logging.getLogger("main")
 async def startup_event():
     await database.connect()
     log.info('Database connected')
-
     await start_scheduler()
-
     server_smtp_gmail.start()
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    await database.connect()
+    await database.disconnect()
     log.info('Database disconnected')
 
     server_smtp_gmail.close()
 
+    schedule.shutdown(wait=False)
 
-# loop = asyncio.new_event_loop()
-# loop.create_task(start_scheduler())
+
 
 if __name__ == '__main__':
     uvicorn.run(

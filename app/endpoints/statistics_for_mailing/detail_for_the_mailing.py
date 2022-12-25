@@ -17,7 +17,7 @@ router = APIRouter()
 log = logging.getLogger("DetailForTheMailing")
 
 
-@router.get(config.detail_mailing_path, response_model=DetailStatisticResponse)
+@router.post(config.detail_mailing_path, response_model=DetailStatisticResponse)
 async def detail_for_the_mailing(mailing: DetailStatistic):
     log.info(f'Detail for the mailing request received, mailing: {mailing.mailing_id}')
 
@@ -34,8 +34,8 @@ async def detail_for_the_mailing(mailing: DetailStatistic):
 
 class GetStatisticsForMailing:
     def __init__(self,
-                 mailing_repository: MailingRepository = Depends(get_mailing_repository),
-                 message_repository: MessageRepository = Depends(get_message_repository)):
+                 mailing_repository: MailingRepository = get_mailing_repository(),
+                 message_repository: MessageRepository = get_message_repository()):
         self.mailing_repository = mailing_repository
         self.message_repository = message_repository
 
@@ -73,6 +73,6 @@ class GetStatisticsForMailing:
         return statistics
 
     @staticmethod
-    async def get_time_sending(time: dict) -> datetime:
+    def get_time_sending(time: dict) -> datetime:
         year, month, day, hour, minute, second = MyDatetime.get_tuple_datetime(time)
         return datetime(year, month, day, hour, minute, second)

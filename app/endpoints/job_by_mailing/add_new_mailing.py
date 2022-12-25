@@ -28,16 +28,23 @@ async def add_new_mailing(
 
         mailing_new = await mailing_repository.get_by_id(mailing_id)
 
-        await StartMailing.start_mail(mailing_new)
     except Exception as e:
         log.info(f'Mailing not added, {e}')
         raise HTTPException(status_code=400, detail="Mailing not added")
 
+    try:
+        await StartMailing.start_mail(mailing_new)
+    except Exception as e:
+        log.info(f'Mailing not started, {e}')
+
+    start_time = MyDatetime.get_str_for_tuple_date(mailing_new.start_time)
+    end_time = MyDatetime.get_str_for_tuple_date(mailing_new.end_time)
+
     return MailingAddResponse(id=mailing_new.id,
                               text_message=mailing_new.text_message,
                               filter=mailing_new.filter,
-                              start_time=MyDatetime.get_tuple_datetime(mailing_new.start_time),
-                              end_time=MyDatetime.get_tuple_datetime(mailing_new.end_time),
+                              start_time=start_time,
+                              end_time=end_time,
                               message="Mailing successfully added",
                               time_sending=mailing_new.time_sending)
 
@@ -68,20 +75,23 @@ class StartMailing:
             self.end_time[3],
             self.end_time[4],
             self.end_time[5])
-        if start_time > end_time:
-            await self._start_scheduler(start_time, end_time)
-        else:
+        # if start_time < datetime.utcnow() < end_time:
+        if start_time < datetime.now() < end_time:
             await SendMail.start_scheduler(self.mailing)
             await self._stop_scheduler(end_time)
+        else:
+            await self._start_scheduler(start_time, end_time)
 
     async def _start_scheduler(self, start_time: datetime, end_time: datetime):
         # TODO add scheduler
+        print(start_time)
         schedule.add_job(
             SendMail.start_scheduler,
             'date',
-            [self.mailing],
+            args=(self.mailing,),
             run_date=start_time,
-            id=self.mailing.id)
+            id=str(self.mailing.id) + 'start',
+            replace_existing=True)
 
         await self._stop_scheduler(end_time)
 
@@ -89,6 +99,7 @@ class StartMailing:
         schedule.add_job(
             SendMail.stop_scheduler,
             'date',
-            [self.mailing.id],
+            args=(self.mailing.id,),
             run_date=end_time,
-            id=self.mailing.id)
+            id=str(self.mailing.id) + 'stop',
+            replace_existing=True)

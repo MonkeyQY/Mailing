@@ -19,10 +19,10 @@ async def update_client(
     log.info(f'Update client request received, client: {client.id}')
 
     try:
-        client_id = await client_repository.update(client)
+        await client_repository.update(client)
         log.info(f'Client {client.id} successfully updated')
 
-        client_new = await client_repository.get_by_id(client_id)
+        client_new = await client_repository.get_by_id(client.id)
     except Exception as e:
         log.info(f'Client not found, {e}')
         raise HTTPException(status_code=404, detail="Client not found")

@@ -17,7 +17,6 @@ class MailingRepository(BaseRepository):
             filter=mailing.filter,
             text_message=mailing.text_message,
             time_sending=mailing.time_sending,
-            update_at=datetime.datetime.utcnow(),
             start_time=mailing.start_time,
             end_time=mailing.end_time
         )
@@ -28,11 +27,10 @@ class MailingRepository(BaseRepository):
             filter=mailing.filter,
             text_message=mailing.text_message,
             time_sending=mailing.time_sending,
-            update_at=datetime.datetime.utcnow(),
             start_time=mailing.start_time,
             end_time=mailing.end_time
         )
-        return await self.database.execute(query=query)
+        await self.database.execute(query=query)
 
     async def delete(self, mailing: MailingDelete):
         query = mailings.delete().where(mailings.c.id == mailing.id)

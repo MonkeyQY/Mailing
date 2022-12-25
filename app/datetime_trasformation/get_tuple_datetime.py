@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class MyDatetime:
 
     @staticmethod
@@ -8,3 +11,15 @@ class MyDatetime:
             int(date.get("hour")), \
             int(date.get("minute")), \
             int(date.get("second"))
+
+    @staticmethod
+    def get_str_for_tuple_date(date: dict) -> str:
+        result_date = str(
+            datetime(
+                date['year'],
+                date['month'],
+                date['day'],
+                date['hour'],
+                date['minute'],
+                date['second']))
+        return result_date
