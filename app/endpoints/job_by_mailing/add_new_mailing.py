@@ -75,8 +75,7 @@ class StartMailing:
             self.end_time[3],
             self.end_time[4],
             self.end_time[5])
-        # if start_time < datetime.utcnow() < end_time:
-        if start_time < datetime.now() < end_time:
+        if start_time < datetime.utcnow() < end_time:
             await SendMail.start_scheduler(self.mailing)
             await self._stop_scheduler(end_time)
         else:

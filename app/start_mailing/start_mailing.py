@@ -46,18 +46,11 @@ class SendMail:
         clients = await self._get_clients()
         log.info(f'Get clients for mailing {self.mailing.id}: {clients}')
 
-        # async with asyncio.TaskGroup() as task_group:
-        #     async with aiohttp.ClientSession() as session:
-        #         for client in clients:
-        #             task_group.create_task(self._send_to_client(client, session))
-
         list_tasks = []
         async with aiohttp.ClientSession() as session:
             for client in clients:
                 list_tasks.append(self._send_to_client(client, session))
             await asyncio.gather(*list_tasks)
-
-        # await self.mailing_repository.end_time_mailing(self.mailing.id)
 
     async def _send_to_client(self, client: Client, session: aiohttp):
         headers = {
