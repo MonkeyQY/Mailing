@@ -56,3 +56,4 @@ smtp_port_gmail = os.getenv("SMTP_PORT_GMAIL", 465)
 
 # List users for send statistics
 list_users_for_send_statistics = os.getenv("LIST_USERS_FOR_SEND_STATISTICS", [my_email])
+hour_send_statistic = os.getenv("HOUR_SEND_STATISTIC", 21)

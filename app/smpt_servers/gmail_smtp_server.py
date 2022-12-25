@@ -25,7 +25,7 @@ class GmailSend(SmtpServer):
     def __init__(self, host, port, my_email, my_email_password):
         super().__init__(host, port, my_email, my_email_password)
 
-    def send_email(self, mail: str, msg: MIMEMultipart) -> bool:
+    def send_email(self, mail: list, msg: MIMEMultipart) -> bool:
         try:
 
             self.server.sendmail(self.my_email, mail, msg.as_string())
