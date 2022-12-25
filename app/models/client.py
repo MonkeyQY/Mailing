@@ -33,7 +33,7 @@ class ClientAddResponse(BaseModel):
     mobile_number: int
     mobile_operator_code: str
     tag: str
-    utc: int
+    utc: str
     message: str
 
 
@@ -41,8 +41,19 @@ class ClientUpdateResponse(BaseModel):
     mobile_number: int
     mobile_operator_code: str
     tag: str
-    utc: int
+    utc: str
     message: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "mobile_number": 79123456789,
+                "mobile_operator_code": "380",
+                "tag": "tag",
+                "utc": '+1',
+                "message": "Client updated"
+            }
+        }
 
 
 class ClientDeleteResponse(BaseModel):

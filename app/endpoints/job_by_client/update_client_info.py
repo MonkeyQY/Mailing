@@ -12,9 +12,10 @@ router = APIRouter()
 log = logging.getLogger("ClientUpdate")
 
 
-@router.put(config.add_client_path, response_model=ClientUpdateResponse)
-def update_client(client: ClientUpdate,
-                  client_repository: ClientRepository = Depends(get_client_repository)):
+@router.put(config.update_client_path, response_model=ClientUpdateResponse)
+async def update_client(
+        client: ClientUpdate,
+        client_repository: ClientRepository = Depends(get_client_repository)):
     log.info(f'Update client request received, client: {client.id}')
 
     try:

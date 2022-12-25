@@ -12,9 +12,10 @@ router = APIRouter()
 log = logging.getLogger("MailingRemove")
 
 
-@router.delete(config.add_client_path, response_model=MailingDeleteResponse)
-def remove_mailing(mailing: MailingDelete,
-                   mailing_repository: MailingRepository = Depends(get_mailing_repository)):
+@router.delete(config.remove_mailing_path, response_model=MailingDeleteResponse)
+async def remove_mailing(
+        mailing: MailingDelete,
+        mailing_repository: MailingRepository = Depends(get_mailing_repository)):
     log.info(f'Remove mailing request received, mailing: {mailing.id}')
 
     try:

@@ -12,9 +12,10 @@ router = APIRouter()
 log = logging.getLogger("ClientRemove")
 
 
-@router.delete(config.add_client_path, response_model=ClientDeleteResponse)
-def remove_client(client: ClientDelete,
-                  client_repository: ClientRepository = Depends(get_client_repository)):
+@router.delete(config.remove_client_path, response_model=ClientDeleteResponse)
+async def remove_client(
+        client: ClientDelete,
+        client_repository: ClientRepository = Depends(get_client_repository)):
     log.info(f'Remove client request received, client: {client.id}')
 
     try:

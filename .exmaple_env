@@ -1,0 +1,35 @@
+HOST=93.168.94.35
+PORT=3000
+
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+POSTGRES_DB=postgres
+
+# API prefix
+API_PREFIX=/api/v1
+
+#API Docks url
+DOCS_URL=/docs
+
+# endpoints
+ADD_CLIENT_PATH=/client/add
+REMOVE_CLIENT_PATH=/client/remove
+UPDATE_CLIENT_PATH=/client/update
+
+ADD_NEW_MAILING_PATH=/mailing/add
+REMOVE_MAILING_PATH=/mailing/remove
+UPDATE_MAILING_PATH=/mailing/update
+
+DETAIL_MAILING_PATH=/mailing/detail
+TOTAL_MAILING_PATH=/mailing/total
+
+
+# URL for send mail on outside service
+URL_FOR_SEND=https://probe.fbrq.cloud/docs
+
+#JWT
+JWT_TOKEN_FOR_OUTSIDE_SERVICE=token

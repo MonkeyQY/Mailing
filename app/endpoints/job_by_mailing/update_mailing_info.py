@@ -12,9 +12,10 @@ router = APIRouter()
 log = logging.getLogger("MailingUpdate")
 
 
-@router.put(config.add_client_path, response_model=MailingUpdateResponse)
-def update_mailing_info(mailing: MailingUpdate,
-                        mailing_repository: MailingRepository = Depends(get_mailing_repository)):
+@router.put(config.update_mailing_path, response_model=MailingUpdateResponse)
+async def update_mailing_info(
+        mailing: MailingUpdate,
+        mailing_repository: MailingRepository = Depends(get_mailing_repository)):
     log.info(f'Update mailing request received, mailing: {mailing.id}')
 
     try:
@@ -27,4 +28,4 @@ def update_mailing_info(mailing: MailingUpdate,
         raise HTTPException(status_code=404, detail="Mailing not found")
 
     return MailingUpdateResponse(id=mailing.id, message='Mailing updated', text_message=mailing_new.text_message,
-                                 filter=mailing_new.filter)
+                                 filter=mailing_new.filter, time_sending=mailing_new.time_sending,)

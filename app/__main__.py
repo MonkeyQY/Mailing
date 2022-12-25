@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 import uvicorn
@@ -14,7 +15,8 @@ from app.endpoints.statistics_for_mailing.total_for_mailings import router as st
 from app.endpoints.statistics_for_mailing.detail_for_the_mailing import router as statistics_for_detail_mailing_router
 
 from app import config
-from app.db.database import database
+from app.db.db import database
+from app.scheduler.scheduler import start_scheduler
 
 # запись логов в файл
 
@@ -65,6 +67,9 @@ async def shutdown_event():
     await database.connect()
     log.info('Database disconnected')
 
+
+loop = asyncio.get_event_loop()
+loop.create_task(start_scheduler())
 
 if __name__ == '__main__':
     uvicorn.run("__main__:app",

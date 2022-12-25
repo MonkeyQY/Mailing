@@ -18,7 +18,7 @@ DATABASE = {
     'port': os.environ.get('DB_PORT', '5432'),
     'username': os.environ.get('DB_USER', 'postgres'),
     'password': os.environ.get('DB_PASS', 'postgres'),
-    'database': os.environ.get('POSTGRES_DB', 'ListenerNotification')
+    'database': os.environ.get('POSTGRES_DB', 'Mailing')
 }
 
 
@@ -39,3 +39,9 @@ update_mailing_path = os.getenv("UPDATE_MAILING_PATH", '/mailing/update')
 
 detail_mailing_path = os.getenv("DETAIL_MAILING_PATH", '/mailing/detail')
 total_mailing_path = os.getenv("TOTAL_MAILING_PATH", '/mailing/total')
+
+# URL for send mail on outside service
+url_for_send = os.getenv("URL_FOR_SEND", 'localhost')
+
+# JWT token for outside service
+jwt_token = os.getenv("JWT_TOKEN_FOR_OUTSIDE_SERVICE")

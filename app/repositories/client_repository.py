@@ -1,5 +1,7 @@
+import time
+
 from app.db.client import clients
-from app.models.client import Client, ClientAdd, ClientUpdate, ClientDelete, ClientAddResponse
+from app.models.client import Client, ClientAdd, ClientUpdate, ClientDelete
 from app.repositories.base_repository import BaseRepository
 
 
@@ -10,29 +12,26 @@ class ClientRepository(BaseRepository):
         client = await self.database.fetch_one(query=query)
         return Client.parse_obj(client)
 
-    async def get_client_where_mobile_code(self, mobile_code: str) -> Client:
-        query = clients.select().where(clients.c.mobile_operator_code == mobile_code)
-        client = await self.database.fetch_one(query=query)
-        return Client.parse_obj(client)
-
-    async def get_client_where_tag(self, tag: str) -> Client:
-        query = clients.select().where(clients.c.tag == tag)
-        client = await self.database.fetch_one(query=query)
-        return Client.parse_obj(client)
+    async def get_clients_where_pattern(self, pattern: str) -> list[Client]:
+        query = clients.select().where(
+            clients.c.mobile_operator_code == pattern or clients.c.tag == pattern)
+        list_client = await self.database.fetch_all(query=query)
+        return [Client.parse_obj(client) for client in list_client]
 
     async def create(self, client: ClientAdd):
-        query = clients.insert().values(client.mobile_number,
-                                        client.mobile_operator_code,
-                                        client.tag,
-                                        client.utc)
+        query = clients.insert().values(
+            mobile_number=client.mobile_number,
+            mobile_operator_code=client.mobile_operator_code,
+            tag=client.tag,
+            utc=client.utc)
         return await self.database.execute(query=query)
 
     async def update(self, client: ClientUpdate):
         query = clients.update().where(clients.c.id == client.id).values(
-            client.mobile_number,
-            client.mobile_operator_code,
-            client.tag,
-            client.utc)
+            mobile_number=client.mobile_number,
+            mobile_operator_code=client.mobile_operator_code,
+            tag=client.tag,
+            utc=client.utc)
         return await self.database.execute(query=query)
 
     async def delete(self, client: ClientDelete):

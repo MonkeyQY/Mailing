@@ -4,7 +4,7 @@ import logging
 # from app.db.notifications import notifications
 # from app.db.patterns import patterns
 # from app.db.balance import balance
-from app.db.database import database, engine, metadata
+from app.db.db import database, engine, metadata
 
 log = logging.getLogger('main.database')
 

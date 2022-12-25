@@ -13,8 +13,9 @@ log = logging.getLogger("ClientAdd")
 
 
 @router.post(config.add_client_path, response_model=ClientAddResponse)
-async def add_client(client: ClientAdd,
-                     client_repository: ClientRepository = Depends(get_client_repository)):
+async def add_client(
+        client: ClientAdd,
+        client_repository: ClientRepository = Depends(get_client_repository)):
     log.info(f"Received client: {client}")
 
     try:

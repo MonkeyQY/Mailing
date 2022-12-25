@@ -1,4 +1,4 @@
-from app.db.database import  Database
+from app.db.db import  Database
 
 
 class BaseRepository:

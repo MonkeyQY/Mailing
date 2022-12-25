@@ -4,7 +4,6 @@ from databases import Database
 
 from app.config import DATABASE
 
-
 database_url = URL.create(**DATABASE)
 
 
