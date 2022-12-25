@@ -13,7 +13,7 @@ class MyDatetime:
             int(date.get("second"))
 
     @staticmethod
-    def get_str_for_tuple_date(date: dict) -> str:
+    def get_str_for_dict_date(date: dict) -> str:
         result_date = str(
             datetime(
                 date['year'],
@@ -23,3 +23,13 @@ class MyDatetime:
                 date['minute'],
                 date['second']))
         return result_date
+
+    @staticmethod
+    def get_datetime(date: dict) -> datetime:
+        return datetime(
+            date['year'],
+            date['month'],
+            date['day'],
+            date['hour'],
+            date['minute'],
+            date['second'])

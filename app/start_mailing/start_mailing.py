@@ -37,8 +37,8 @@ class SendMail:
             self,
             clients_repository: ClientRepository = get_client_repository()):
         clients = await clients_repository.get_clients_where_pattern(self.mailing.filter)
-        clients = [client for client in clients if
-                   (datetime.datetime.utcnow().hour + int(client.utc))
+        clients = [client for client in clients
+                   if (datetime.datetime.utcnow().hour + int(client.utc))
                    == self.mailing.time_sending]
         return clients
 
@@ -60,7 +60,9 @@ class SendMail:
         }
 
         message_id = await self._create_message(client.id)
-        log.info(f"Create message {message_id} for client {client.id}, mailing {self.mailing.id}")
+        log.info(f"Create message {message_id} "
+                 f"for client {client.id}, "
+                 f"mailing {self.mailing.id}")
 
         json_data = {
             'id': message_id,

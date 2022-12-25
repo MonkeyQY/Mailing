@@ -37,68 +37,54 @@ async def add_new_mailing(
     except Exception as e:
         log.info(f'Mailing not started, {e}')
 
-    start_time = MyDatetime.get_str_for_tuple_date(mailing_new.start_time)
-    end_time = MyDatetime.get_str_for_tuple_date(mailing_new.end_time)
+    start_time = MyDatetime.get_str_for_dict_date(mailing_new.start_time)
+    end_time = MyDatetime.get_str_for_dict_date(mailing_new.end_time)
 
-    return MailingAddResponse(id=mailing_new.id,
-                              text_message=mailing_new.text_message,
-                              filter=mailing_new.filter,
-                              start_time=start_time,
-                              end_time=end_time,
-                              message="Mailing successfully added",
-                              time_sending=mailing_new.time_sending)
+    return MailingAddResponse(
+        id=mailing_new.id,
+        text_message=mailing_new.text_message,
+        filter=mailing_new.filter,
+        start_time=start_time,
+        end_time=end_time,
+        message="Mailing successfully added",
+        time_sending=mailing_new.time_sending)
 
 
 class StartMailing:
 
     def __init__(self, mailing: Mailing):
         self.mailing = mailing
-        self.start_time: tuple = MyDatetime.get_tuple_datetime(self.mailing.start_time)
-        self.end_time: tuple = MyDatetime.get_tuple_datetime(self.mailing.end_time)
+        self.start_time: datetime = MyDatetime.get_datetime(self.mailing.start_time)
+        self.end_time: datetime = MyDatetime.get_datetime(self.mailing.end_time)
 
     @classmethod
     async def start_mail(cls, mailing: Mailing):
         await cls(mailing)._start()
 
     async def _start(self):
-        start_time = datetime(
-            self.start_time[0],
-            self.start_time[1],
-            self.start_time[2],
-            self.start_time[3],
-            self.start_time[4],
-            self.start_time[5])
-        end_time = datetime(
-            self.end_time[0],
-            self.end_time[1],
-            self.end_time[2],
-            self.end_time[3],
-            self.end_time[4],
-            self.end_time[5])
-        if start_time < datetime.utcnow() < end_time:
+        if self.start_time < datetime.utcnow() < self.end_time:
             await SendMail.start_scheduler(self.mailing)
-            await self._stop_scheduler(end_time)
+            await self._stop_scheduler()
         else:
-            await self._start_scheduler(start_time, end_time)
+            await self._start_scheduler()
 
-    async def _start_scheduler(self, start_time: datetime, end_time: datetime):
+    async def _start_scheduler(self):
         # TODO add scheduler
-        print(start_time)
         schedule.add_job(
             SendMail.start_scheduler,
             'date',
             args=(self.mailing,),
-            run_date=start_time,
+            run_date=self.start_time,
             id=str(self.mailing.id) + 'start',
             replace_existing=True)
 
-        await self._stop_scheduler(end_time)
+        await self._stop_scheduler()
 
-    async def _stop_scheduler(self, end_time: datetime):
+    async def _stop_scheduler(self):
         schedule.add_job(
             SendMail.stop_scheduler,
             'date',
             args=(self.mailing.id,),
-            run_date=end_time,
+            run_date=self.end_time,
             id=str(self.mailing.id) + 'stop',
             replace_existing=True)

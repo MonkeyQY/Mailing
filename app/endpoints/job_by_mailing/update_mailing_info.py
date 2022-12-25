@@ -33,9 +33,14 @@ async def update_mailing_info(
     except Exception as e:
         log.info(f'Mailing not started, {e}')
 
-    start_time = MyDatetime.get_str_for_tuple_date(mailing_new.start_time)
-    end_time = MyDatetime.get_str_for_tuple_date(mailing_new.end_time)
+    start_time = MyDatetime.get_str_for_dict_date(mailing_new.start_time)
+    end_time = MyDatetime.get_str_for_dict_date(mailing_new.end_time)
 
-    return MailingUpdateResponse(id=mailing.id, message='Mailing updated', text_message=mailing_new.text_message,
-                                 filter=mailing_new.filter, time_sending=mailing_new.time_sending,
-                                 start_time=start_time, end_time=end_time)
+    return MailingUpdateResponse(
+        id=mailing.id,
+        message='Mailing updated',
+        text_message=mailing_new.text_message,
+        filter=mailing_new.filter,
+        time_sending=mailing_new.time_sending,
+        start_time=start_time,
+        end_time=end_time)

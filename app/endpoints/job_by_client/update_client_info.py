@@ -27,6 +27,10 @@ async def update_client(
         log.info(f'Client not found, {e}')
         raise HTTPException(status_code=404, detail="Client not found")
 
-    return ClientUpdateResponse(id=client_new.id, message='Client updated', mobile_number=client_new.mobile_number,
-                                mobile_operator_code=client_new.mobile_operator_code, tag=client_new.tag,
-                                utc=client_new.utc)
+    return ClientUpdateResponse(
+        id=client_new.id,
+        message='Client updated',
+        mobile_number=client_new.mobile_number,
+        mobile_operator_code=client_new.mobile_operator_code,
+        tag=client_new.tag,
+        utc=client_new.utc)

@@ -59,20 +59,15 @@ class GetStatisticsForMailing:
 
             list_messages.append(dict_message)
 
-
         statistics = {
             'mailing_id': mailing_id,
             'filter': mailing.filter,
             'messages': list_messages,
             'time_sending': mailing.time_sending,
-            'start_time': self.get_time_sending(mailing.start_time),
-            'end_time': self.get_time_sending(mailing.end_time),
+            'start_time': MyDatetime.get_datetime(mailing.start_time),
+            'end_time': MyDatetime.get_datetime(mailing.end_time),
             'updated_at': mailing.updated_at
         }
 
         return statistics
 
-    @staticmethod
-    def get_time_sending(time: dict) -> datetime:
-        year, month, day, hour, minute, second = MyDatetime.get_tuple_datetime(time)
-        return datetime(year, month, day, hour, minute, second)

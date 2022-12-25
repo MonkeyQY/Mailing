@@ -28,9 +28,10 @@ async def add_client(
         log.info(f"Error: {e} for client: {client}")
         raise HTTPException(status_code=e.status_code, detail=e.detail)
 
-    return ClientAddResponse(message=f"Client added, id: {client_new.id}",
-                             id=client_new.id,
-                             mobile_number=client_new.mobile_number,
-                             mobile_operator_code=client_new.mobile_operator_code,
-                             tag=client_new.tag,
-                             utc=client_new.utc)
+    return ClientAddResponse(
+        message=f"Client added, id: {client_new.id}",
+        id=client_new.id,
+        mobile_number=client_new.mobile_number,
+        mobile_operator_code=client_new.mobile_operator_code,
+        tag=client_new.tag,
+        utc=client_new.utc)

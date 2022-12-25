@@ -23,7 +23,7 @@ def msg_preparation(mail: list) -> MIMEMultipart:
     msg['Subject'] = 'Confirm your email'
     msg['Content-Type'] = 'text/html; charset=utf-8'
 
-    msg.attach(MIMEText("<b>Verification code: " +  "</b>", 'html'))
+    msg.attach(MIMEText("<b>Verification code: " + "</b>", 'html'))
     return msg
 
 

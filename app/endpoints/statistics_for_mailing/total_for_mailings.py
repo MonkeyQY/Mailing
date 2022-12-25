@@ -25,6 +25,7 @@ async def total_for_mailings():
     try:
         statistics = await GetStatistic.get_statistic()
         log.info('Total for mailings request successful')
+
     except ValueError:
         log.info('Total for mailings request failed')
         raise HTTPException(status_code=400, detail="Wrong data")
