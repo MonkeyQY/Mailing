@@ -45,3 +45,14 @@ url_for_send = os.getenv("URL_FOR_SEND", 'localhost')
 
 # JWT token for outside service
 jwt_token = os.getenv("JWT_TOKEN_FOR_OUTSIDE_SERVICE")
+
+# email and password for send email
+my_email = os.getenv("MY_EMAIL")
+my_email_password = os.getenv("MY_EMAIL_PASSWORD")
+
+# smtp server
+smtp_server_gmail = os.getenv("SMTP_SERVER_GMAIL", 'smtp.gmail.com')
+smtp_port_gmail = os.getenv("SMTP_PORT_GMAIL", 465)
+
+# List users for send statistics
+list_users_for_send_statistics = os.getenv("LIST_USERS_FOR_SEND_STATISTICS", [my_email])

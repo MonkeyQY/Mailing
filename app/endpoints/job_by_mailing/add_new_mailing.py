@@ -1,17 +1,15 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from fastapi import APIRouter, Request, Response, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends
 
 from app import config
 from app.datetime_trasformation.get_tuple_datetime import MyDatetime
-from app.depends.depend_client import get_client_repository
 from app.depends.depend_mailing import get_mailing_repository
 from app.models.mailing import MailingAddResponse, MailingAdd, Mailing
-from app.repositories.client_repository import ClientRepository
 from app.repositories.mailing_repository import MailingRepository
 from app.scheduler.scheduler import schedule
-from start_mailing.start_mailing import SendMail
+from app.start_mailing.start_mailing import SendMail
 
 router = APIRouter()
 
@@ -48,7 +46,8 @@ class StartMailing:
 
     def __init__(self, mailing: Mailing):
         self.mailing = mailing
-        self.dates: tuple = MyDatetime.get_tuple_datetime(self.mailing.start_time)
+        self.start_time: tuple = MyDatetime.get_tuple_datetime(self.mailing.start_time)
+        self.end_time: tuple = MyDatetime.get_tuple_datetime(self.mailing.end_time)
 
     @classmethod
     async def start_mail(cls, mailing: Mailing):
@@ -56,23 +55,40 @@ class StartMailing:
 
     async def _start(self):
         start_time = datetime(
-            self.dates[0],
-            self.dates[1],
-            self.dates[2],
-            self.dates[3],
-            self.dates[4],
-            self.dates[5])
-        time_now = datetime.utcnow()
-        if start_time > time_now:
-            await self._start_scheduler(start_time)
+            self.start_time[0],
+            self.start_time[1],
+            self.start_time[2],
+            self.start_time[3],
+            self.start_time[4],
+            self.start_time[5])
+        end_time = datetime(
+            self.end_time[0],
+            self.end_time[1],
+            self.end_time[2],
+            self.end_time[3],
+            self.end_time[4],
+            self.end_time[5])
+        if start_time > end_time:
+            await self._start_scheduler(start_time, end_time)
         else:
             await SendMail.start_scheduler(self.mailing)
+            await self._stop_scheduler(end_time)
 
-    async def _start_scheduler(self, start_time):
+    async def _start_scheduler(self, start_time: datetime, end_time: datetime):
         # TODO add scheduler
         schedule.add_job(
             SendMail.start_scheduler,
             'date',
             [self.mailing],
             run_date=start_time,
+            id=self.mailing.id)
+
+        await self._stop_scheduler(end_time)
+
+    async def _stop_scheduler(self, end_time: datetime):
+        schedule.add_job(
+            SendMail.stop_scheduler,
+            'date',
+            [self.mailing.id],
+            run_date=end_time,
             id=self.mailing.id)

@@ -17,6 +17,7 @@ from app.endpoints.statistics_for_mailing.detail_for_the_mailing import router a
 from app import config
 from app.db.db import database
 from app.scheduler.scheduler import start_scheduler
+from app.smpt_servers import server_smtp_gmail
 
 # запись логов в файл
 
@@ -28,7 +29,7 @@ host = config.host
 port = config.port
 
 app = FastAPI(
-    title="Listener",
+    title="Mailing",
     description="API for the application",
     version="1.0.0",
     docs_url=config.docs_url)
@@ -61,19 +62,26 @@ async def startup_event():
     await database.connect()
     log.info('Database connected')
 
+    await start_scheduler()
+
+    server_smtp_gmail.start()
+
 
 @app.on_event("shutdown")
 async def shutdown_event():
     await database.connect()
     log.info('Database disconnected')
 
+    server_smtp_gmail.close()
 
-loop = asyncio.get_event_loop()
-loop.create_task(start_scheduler())
+
+# loop = asyncio.new_event_loop()
+# loop.create_task(start_scheduler())
 
 if __name__ == '__main__':
-    uvicorn.run("__main__:app",
-                host=host,
-                port=port,
-                reload=True,
-                log_config=None)
+    uvicorn.run(
+        "__main__:app",
+        host=host,
+        port=port,
+        reload=True,
+        log_config=None)

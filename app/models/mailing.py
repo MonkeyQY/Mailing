@@ -117,7 +117,7 @@ class MailingAddResponse(BaseModel):
                     "minute": 0,
                     "second": 0
                 },
-                "message": "Mailing added"
+                "message": "Mailing updated successfully",
             }
         }
 

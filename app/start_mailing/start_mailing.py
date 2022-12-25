@@ -15,7 +15,7 @@ from app.models.message import Message
 from app.repositories.client_repository import ClientRepository
 from app.repositories.mailing_repository import MailingRepository
 from app.repositories.message_repository import MessageRepository
-
+from app.scheduler.scheduler import schedule
 
 log = logging.getLogger("SendMail")
 
@@ -58,18 +58,38 @@ class SendMail:
             'Content-Type': 'application/json',
         }
 
+        message_id = await self._create_message(client.id)
+
         json_data = {
-            'id': await self._create_message(client.id),
+            'id': message_id,
             'phone': client.mobile_number,
             'text': self.mailing.text_message,
         }
-        log.info(f"Create message {json_data['id']} for client {client.id}, mailing {self.mailing.id}")
+        log.info(f"Create message {message_id} for client {client.id}, mailing {self.mailing.id}")
 
-        response = session.post(config.url_for_send, headers=headers, json=json_data)
-        log.info(f'Send message to client {client.id} with response {response}, mailing {self.mailing.id}')
+        url = config.url_for_send + "/" + message_id
+        response = await session.post(url, headers=headers, json=json_data)
+
+        if response.status != 200:
+            log.info(f"Error: {response} for client: {client}")
+            # TODO add error handling
+            return
+        await self._update_message(message_id)
+        log.info(f'Send message to client {client.id} with response {response},'
+                 f'mailing {self.mailing.id} - message {message_id}')
 
     async def _create_message(
             self,
             client_id: int,
-            message_repository: MessageRepository = Depends(get_message_repository)) -> Message:
+            message_repository: MessageRepository = Depends(get_message_repository)):
         return await message_repository.create(client_id, self.mailing.id)
+
+    @staticmethod
+    async def _update_message(
+            message_id: int,
+            message_repository: MessageRepository = Depends(get_message_repository)):
+        return await message_repository.change_status(message_id)
+
+    @staticmethod
+    async def stop_scheduler(mailing_id: int):
+        schedule.remove_job(mailing_id)
