@@ -9,4 +9,3 @@ class Message(BaseModel):
     client_id: int
     created_at: datetime
     sending_status: bool
-

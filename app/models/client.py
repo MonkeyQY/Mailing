@@ -50,8 +50,8 @@ class ClientUpdateResponse(BaseModel):
                 "mobile_number": 79123456789,
                 "mobile_operator_code": "380",
                 "tag": "tag",
-                "utc": '+1',
-                "message": "Client updated"
+                "utc": "+1",
+                "message": "Client updated",
             }
         }
 

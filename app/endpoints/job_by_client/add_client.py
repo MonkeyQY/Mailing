@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Request, Response, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends
 
 from app import config
 from app.depends.depend_client import get_client_repository
@@ -14,8 +14,9 @@ log = logging.getLogger("ClientAdd")
 
 @router.post(config.add_client_path, response_model=ClientAddResponse)
 async def add_client(
-        client: ClientAdd,
-        client_repository: ClientRepository = Depends(get_client_repository)):
+    client: ClientAdd,
+    client_repository: ClientRepository = Depends(get_client_repository),
+) -> ClientAddResponse:
     log.info(f"Received client: {client}")
 
     try:
@@ -34,4 +35,5 @@ async def add_client(
         mobile_number=client_new.mobile_number,
         mobile_operator_code=client_new.mobile_operator_code,
         tag=client_new.tag,
-        utc=client_new.utc)
+        utc=client_new.utc,
+    )

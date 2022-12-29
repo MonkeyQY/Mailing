@@ -33,7 +33,7 @@ class MailingAdd(BaseModel):
                     "day": 1,
                     "hour": 0,
                     "minute": 0,
-                    "second": 0
+                    "second": 0,
                 },
                 "end_time": {
                     "year": 2021,
@@ -41,7 +41,7 @@ class MailingAdd(BaseModel):
                     "day": 1,
                     "hour": 0,
                     "minute": 0,
-                    "second": 0
+                    "second": 0,
                 },
             }
         }
@@ -69,7 +69,7 @@ class MailingUpdate(BaseModel):
                     "day": 1,
                     "hour": 0,
                     "minute": 0,
-                    "second": 0
+                    "second": 0,
                 },
                 "end_time": {
                     "year": 2021,
@@ -77,7 +77,7 @@ class MailingUpdate(BaseModel):
                     "day": 1,
                     "hour": 0,
                     "minute": 0,
-                    "second": 0
+                    "second": 0,
                 },
             }
         }

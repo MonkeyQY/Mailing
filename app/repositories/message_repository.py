@@ -9,21 +9,18 @@ class MessageRepository(BaseRepository):
         list_messages = await self.database.fetch_all(query=query)
         return [Message.parse_obj(message) for message in list_messages]
 
-    async def create(self,
-                     client_id: int,
-                     mailing_id: int,
-                     status_sending: bool = False):
+    async def create(
+        self, client_id: int, mailing_id: int, status_sending: bool = False
+    ) -> int:
         query = messages.insert().values(
-            client_id=client_id,
-            mailing_id=mailing_id,
-            sending_status=status_sending
+            client_id=client_id, mailing_id=mailing_id, sending_status=status_sending
         )
         return await self.database.execute(query=query)
 
-    async def change_status(self,
-                            message_id: int,
-                            status_sending: bool = True):
-        query = messages.update().where(messages.c.id == message_id).values(
-            sending_status=status_sending
+    async def change_status(self, message_id: int, status_sending: bool = True) -> None:
+        query = (
+            messages.update()
+            .where(messages.c.id == message_id)
+            .values(sending_status=status_sending)
         )
         return await self.database.execute(query=query)
