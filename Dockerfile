@@ -27,3 +27,5 @@ COPY requirements.txt .
 RUN pip install --no-cache /wheels/*
 
 COPY app app
+
+CMD ["uvicorn", "__main__:app", "--host", "0.0.0.0"]
